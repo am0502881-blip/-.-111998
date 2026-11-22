@@ -1,0 +1,1142 @@
+{
+  "entities": {
+    "Teacher": {
+      "title": "Teacher",
+      "description": "Authorized teacher or assistant administrator profile.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "email": { "type": "string", "maxLength": 200 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 150 },
+        "role": { "type": "string", "enum": ["owner", "assistant"] },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "email", "displayName", "role", "active", "createdAt"]
+    },
+    "PortalInvite": {
+      "title": "PortalInvite",
+      "description": "Hashed invite token mapping phone + secret code to a student or parent role.",
+      "type": "object",
+      "properties": {
+        "inviteHash": { "type": "string", "minLength": 32, "maxLength": 128 },
+        "role": { "type": "string", "enum": ["student", "parent"] },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "parentPhone": { "type": "string", "maxLength": 30 },
+        "used": { "type": "boolean" },
+        "claimedByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["inviteHash", "role", "studentId", "used", "createdAt"]
+    },
+    "UserLink": {
+      "title": "UserLink",
+      "description": "Authenticated user binding to a student or parent profile.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "role": { "type": "string", "enum": ["student", "parent"] },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentIds": { "type": "array" },
+        "parentPhone": { "type": "string", "maxLength": 30 },
+        "inviteHash": { "type": "string", "minLength": 32, "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "role", "studentId", "inviteHash", "createdAt"]
+    },
+    "PlatformSettings": {
+      "title": "PlatformSettings",
+      "description": "Teacher identity, subjects, grades, systems, and default exam settings.",
+      "type": "object",
+      "properties": {
+        "teacherName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "phones": { "type": "array" },
+        "stages": { "type": "array" },
+        "systems": { "type": "array" },
+        "subjects": { "type": "array" },
+        "defaultMonthlyFee": { "type": "number" },
+        "defaultExamDuration": { "type": "number" },
+        "hideRankingFromStudents": { "type": "boolean" },
+        "aiStrictSourceDefault": { "type": "boolean" },
+        "defaultPaperDesign": { "type": "object" },
+        "teacherBio": { "type": "string", "maxLength": 1500 },
+        "heroTagline": { "type": "string", "maxLength": 300 },
+        "customSubjects": { "type": "array" },
+        "customLibraryFolders": { "type": "array" },
+        "customExamCategories": { "type": "array" },
+        "customBands": { "type": "array" },
+        "previewInviteToken": { "type": "string", "maxLength": 128 },
+        "previewInviteActive": { "type": "boolean" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["teacherName", "phones", "updatedAt"]
+    },
+    "Group": {
+      "title": "Group",
+      "description": "Study group tied to stage, grade, educational system, and subject.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "stage": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "grade": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "system": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "monthlyFee": { "type": "number" },
+        "scheduleSummary": { "type": "string", "maxLength": 300 },
+        "color": { "type": "string", "maxLength": 32 },
+        "status": { "type": "string", "enum": ["active", "paused"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "stage", "grade", "system", "subject", "monthlyFee", "status", "createdAt"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Registered student profile with parent contact, groups, and follow-up plan.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "fullName": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "studentPhone": { "type": "string", "maxLength": 30 },
+        "parentName": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "parentPhone": { "type": "string", "maxLength": 30 },
+        "stage": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "grade": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "system": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "subjects": { "type": "array" },
+        "groupIds": { "type": "array" },
+        "monthlyFee": { "type": "number" },
+        "enrolledAt": { "type": "string", "maxLength": 40 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "followUpPlan": { "type": "string", "maxLength": 2000 },
+        "studentCode": { "type": "string", "maxLength": 32 },
+        "parentCode": { "type": "string", "maxLength": 32 },
+        "isArchived": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "fullName", "parentName", "parentPhone", "stage", "grade", "system", "subjects", "groupIds", "enrolledAt", "isArchived", "createdAt"]
+    },
+    "PrivateNote": {
+      "title": "PrivateNote",
+      "description": "Teacher-only internal academic or behavioral note for a student.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "content": { "type": "string", "minLength": 1, "maxLength": 2000 },
+        "category": { "type": "string", "maxLength": 60 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "content", "createdAt"]
+    },
+    "StudentPortal": {
+      "title": "StudentPortal",
+      "description": "Read-only consolidated student and parent portal snapshot (no internal teacher notes).",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "fullName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "stage": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "system": { "type": "string", "maxLength": 80 },
+        "subjects": { "type": "array" },
+        "groupIds": { "type": "array" },
+        "monthlyFee": { "type": "number" },
+        "totalPaid": { "type": "number" },
+        "attendanceSummary": { "type": "array" },
+        "evaluationsSummary": { "type": "array" },
+        "paymentsSummary": { "type": "array" },
+        "examResultsSummary": { "type": "array" },
+        "lessonMastery": { "type": "array" },
+        "skillMastery": { "type": "array" },
+        "followUpPlan": { "type": "string", "maxLength": 2000 },
+        "teacherFeedback": { "type": "string", "maxLength": 2000 },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "fullName", "updatedAt"]
+    },
+    "ScheduleSlot": {
+      "title": "ScheduleSlot",
+      "description": "Weekly class schedule slot from Saturday to Thursday.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "dayOfWeek": { "type": "string", "enum": ["السبت", "الأحد", "الإثنين", "الثلاثاء", "الأربعاء", "الخميس"] },
+        "startTime": { "type": "string", "minLength": 4, "maxLength": 10 },
+        "endTime": { "type": "string", "minLength": 4, "maxLength": 10 },
+        "groupId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "groupName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "grade": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "color": { "type": "string", "maxLength": 32 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "dayOfWeek", "startTime", "endTime", "groupId", "groupName", "subject", "grade", "createdAt"]
+    },
+    "AttendanceRecord": {
+      "title": "AttendanceRecord",
+      "description": "Class session attendance, recitation, and homework log per student.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "groupId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "date": { "type": "string", "minLength": 8, "maxLength": 30 },
+        "lessonTitle": { "type": "string", "maxLength": 200 },
+        "status": { "type": "string", "enum": ["present", "absent", "late", "excused"] },
+        "lateMinutes": { "type": "number" },
+        "earlyArrival": { "type": "boolean" },
+        "bonusPoints": { "type": "number" },
+        "recitation": { "type": "string", "maxLength": 100 },
+        "homework": { "type": "string", "maxLength": 100 },
+        "performance": { "type": "number" },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "groupId", "date", "status", "createdAt"]
+    },
+    "Evaluation": {
+      "title": "Evaluation",
+      "description": "Periodic educational follow-up and progress evaluation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "date": { "type": "string", "maxLength": 30 },
+        "level": { "type": "string", "maxLength": 60 },
+        "participation": { "type": "number" },
+        "recitationLevel": { "type": "number" },
+        "homeworkPerformance": { "type": "number" },
+        "quizScore": { "type": "number" },
+        "strengths": { "type": "string", "maxLength": 600 },
+        "needsFollowUp": { "type": "string", "maxLength": 600 },
+        "parentVisibleNote": { "type": "string", "maxLength": 600 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "date", "level", "createdAt"]
+    },
+    "Payment": {
+      "title": "Payment",
+      "description": "Student tuition fee payment record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "monthKey": { "type": "string", "maxLength": 20 },
+        "requiredAmount": { "type": "number" },
+        "paidAmount": { "type": "number" },
+        "remainingAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["paid", "partial", "unpaid"] },
+        "paymentDate": { "type": "string", "maxLength": 30 },
+        "method": { "type": "string", "maxLength": 60 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "requiredAmount", "paidAmount", "remainingAmount", "status", "paymentDate", "createdAt"]
+    },
+    "LibraryItem": {
+      "title": "LibraryItem",
+      "description": "Central educational library resource with optional student portal sharing.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 220 },
+        "stage": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "grade": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "system": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "subject": { "type": "string", "minLength": 1, "maxLength": 80 },
+        "unit": { "type": "string", "maxLength": 160 },
+        "lesson": { "type": "string", "maxLength": 160 },
+        "contentType": { "type": "string", "maxLength": 60 },
+        "folder": { "type": "string", "maxLength": 120 },
+        "description": { "type": "string", "maxLength": 600 },
+        "extractedText": { "type": "string", "maxLength": 250000 },
+        "fileName": { "type": "string", "maxLength": 220 },
+        "fileMime": { "type": "string", "maxLength": 120 },
+        "sharedWithStudents": { "type": "boolean" },
+        "targetGroupIds": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "stage", "grade", "system", "subject", "contentType", "extractedText", "createdAt"]
+    },
+    "QuestionBankItem": {
+      "title": "QuestionBankItem",
+      "description": "Reusable question stored in the permanent question bank with skill, quality, and usage history.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "prompt": { "type": "string", "minLength": 2, "maxLength": 2000 },
+        "type": { "type": "string", "maxLength": 60 },
+        "options": { "type": "array" },
+        "correctAnswer": { "type": "string", "maxLength": 2000 },
+        "explanation": { "type": "string", "maxLength": 2000 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "unit": { "type": "string", "maxLength": 160 },
+        "lesson": { "type": "string", "maxLength": 160 },
+        "skill": { "type": "string", "maxLength": 120 },
+        "points": { "type": "number" },
+        "difficulty": { "type": "string", "enum": ["easy", "medium", "hard"] },
+        "sourceTitle": { "type": "string", "maxLength": 220 },
+        "usageCount": { "type": "number" },
+        "usedInExamIds": { "type": "array" },
+        "lastUsedAt": { "type": "string", "maxLength": 40 },
+        "isStarred": { "type": "boolean" },
+        "isApproved": { "type": "boolean" },
+        "qualityRating": { "type": "number" },
+        "clarityFlag": { "type": "string", "enum": ["clear", "needs_review", "ambiguous"] },
+        "attemptCount": { "type": "number" },
+        "correctCount": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "prompt", "type", "correctAnswer", "grade", "subject", "points", "difficulty", "createdAt"]
+    },
+    "Exam": {
+      "title": "Exam",
+      "description": "Published or draft exam metadata, paper design, blueprint, and student-safe questions.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 220 },
+        "examCategory": { "type": "string", "maxLength": 60 },
+        "examPurpose": { "type": "string", "enum": ["exam", "homework", "remedial", "practice"] },
+        "stage": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "system": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "unit": { "type": "string", "maxLength": 160 },
+        "lesson": { "type": "string", "maxLength": 160 },
+        "totalMarks": { "type": "number" },
+        "durationMinutes": { "type": "number" },
+        "questionCount": { "type": "number" },
+        "questions": { "type": "array" },
+        "targetGroupIds": { "type": "array" },
+        "targetStudentIds": { "type": "array" },
+        "startAt": { "type": "string", "maxLength": 40 },
+        "endAt": { "type": "string", "maxLength": 40 },
+        "maxAttempts": { "type": "number" },
+        "showResultsAfterSubmit": { "type": "boolean" },
+        "showAnswersToStudents": { "type": "boolean" },
+        "published": { "type": "boolean" },
+        "sealedKey": { "type": "string", "maxLength": 100000 },
+        "instructions": { "type": "string", "maxLength": 1500 },
+        "variantLabel": { "type": "string", "maxLength": 16 },
+        "blueprint": { "type": "object" },
+        "paperDesign": { "type": "object" },
+        "versions": { "type": "array" },
+        "shuffleQuestions": { "type": "boolean" },
+        "antiCheat": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "grade", "subject", "totalMarks", "durationMinutes", "questions", "published", "createdAt"]
+    },
+    "ExamTemplate": {
+      "title": "ExamTemplate",
+      "description": "Reusable exam factory template with paper design and difficulty rules.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "name": { "type": "string", "minLength": 1, "maxLength": 180 },
+        "examCategory": { "type": "string", "maxLength": 60 },
+        "stage": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "system": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "questionCount": { "type": "number" },
+        "totalMarks": { "type": "number" },
+        "durationMinutes": { "type": "number" },
+        "questionTypes": { "type": "array" },
+        "difficultyMix": { "type": "object" },
+        "targetSkills": { "type": "array" },
+        "instructions": { "type": "string", "maxLength": 1500 },
+        "paperDesign": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "name", "grade", "subject", "questionCount", "totalMarks", "durationMinutes", "createdAt"]
+    },
+    "ExamAnswerKey": {
+      "title": "ExamAnswerKey",
+      "description": "Teacher-only answer key and explanations isolated from students.",
+      "type": "object",
+      "properties": {
+        "examId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "answers": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["examId", "answers", "updatedAt"]
+    },
+    "ExamAttempt": {
+      "title": "ExamAttempt",
+      "description": "Student online exam attempt with server-verified timing, answers, and item breakdown.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "examId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "examTitle": { "type": "string", "maxLength": 220 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "attemptNumber": { "type": "number" },
+        "status": { "type": "string", "enum": ["in_progress", "submitted", "graded"] },
+        "answers": { "type": "object" },
+        "objectiveScore": { "type": "number" },
+        "essayScore": { "type": "number" },
+        "totalScore": { "type": "number" },
+        "maxScore": { "type": "number" },
+        "gradingReceipt": { "type": "string", "maxLength": 2000 },
+        "questionBreakdown": { "type": "array" },
+        "aiEssayFeedback": { "type": "object" },
+        "teacherFeedback": { "type": "string", "maxLength": 1500 },
+        "tabSwitchCount": { "type": "number" },
+        "startedAt": { "type": "string", "format": "date-time" },
+        "serverStartedMs": { "type": "number" },
+        "submittedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "examId", "studentId", "studentUid", "attemptNumber", "status", "startedAt"]
+    },
+    "RemedialAssignment": {
+      "title": "RemedialAssignment",
+      "description": "Closed-loop targeted remedial drill assigned from student errors.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 220 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "sourceExamId": { "type": "string", "maxLength": 128 },
+        "sourceExamTitle": { "type": "string", "maxLength": 220 },
+        "weakLessons": { "type": "array" },
+        "weakSkills": { "type": "array" },
+        "questions": { "type": "array" },
+        "preScorePct": { "type": "number" },
+        "postScorePct": { "type": "number" },
+        "status": { "type": "string", "enum": ["assigned", "completed"] },
+        "studentAnswers": { "type": "object" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "completedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "title", "studentId", "grade", "subject", "questions", "status", "createdAt"]
+    },
+    "AdaptivePracticeSession": {
+      "title": "AdaptivePracticeSession",
+      "description": "Student adaptive self-practice or micro-drill record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "lesson": { "type": "string", "maxLength": 160 },
+        "unit": { "type": "string", "maxLength": 160 },
+        "skill": { "type": "string", "maxLength": 120 },
+        "difficultyReached": { "type": "string", "enum": ["easy", "medium", "hard"] },
+        "totalQuestions": { "type": "number" },
+        "correctCount": { "type": "number" },
+        "scorePct": { "type": "number" },
+        "answeredQuestionIds": { "type": "array" },
+        "pointsEarned": { "type": "number" },
+        "mode": { "type": "string", "enum": ["remedial", "adaptive", "daily_quick", "curriculum"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "studentUid", "subject", "grade", "totalQuestions", "correctCount", "scorePct", "createdAt"]
+    },
+    "StudentAchievementState": {
+      "title": "StudentAchievementState",
+      "description": "Individual student motivation points, weekly goal, badges, certificates, and bookmarks.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "points": { "type": "number" },
+        "weeklyGoalSessions": { "type": "number" },
+        "weeklyCompletedSessions": { "type": "number" },
+        "streakDays": { "type": "number" },
+        "earnedBadges": { "type": "array" },
+        "certificates": { "type": "array" },
+        "savedLibraryIds": { "type": "array" },
+        "completedActivityIds": { "type": "array" },
+        "recentRewards": { "type": "array" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["studentId", "points", "updatedAt"]
+    },
+    "PointReward": {
+      "title": "PointReward",
+      "description": "Teacher-awarded excellence points ledger entry for early attendance, full exam scores, or distinction.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "groupId": { "type": "string", "maxLength": 128 },
+        "groupName": { "type": "string", "maxLength": 160 },
+        "points": { "type": "number" },
+        "reason": { "type": "string", "enum": ["early_attendance", "full_exam_score", "homework_excellence", "participation", "custom"] },
+        "reasonLabel": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "sourceId": { "type": "string", "maxLength": 180 },
+        "notes": { "type": "string", "maxLength": 400 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "studentName", "points", "reason", "reasonLabel", "createdAt"]
+    },
+    "GroupLeaderboard": {
+      "title": "GroupLeaderboard",
+      "description": "Privacy-safe aggregated group leaderboard metrics for fair group competition.",
+      "type": "object",
+      "properties": {
+        "groupId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "groupName": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "stage": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "color": { "type": "string", "maxLength": 32 },
+        "studentCount": { "type": "number" },
+        "totalPoints": { "type": "number" },
+        "averagePoints": { "type": "number" },
+        "earlyAttendanceCount": { "type": "number" },
+        "fullScoreCount": { "type": "number" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["groupId", "groupName", "studentCount", "totalPoints", "averagePoints", "updatedAt"]
+    },
+    "InteractiveActivity": {
+      "title": "InteractiveActivity",
+      "description": "Curriculum-aligned interactive activity (map pins, timeline ordering, matching, flashcards, challenges).",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "activityType": { "type": "string", "enum": ["map_pin", "timeline_order", "term_match", "flashcards", "quick_challenge", "arabic_irab", "voice_dictation"] },
+        "subject": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "unit": { "type": "string", "maxLength": 160 },
+        "lesson": { "type": "string", "maxLength": 160 },
+        "pointsReward": { "type": "number" },
+        "mapRegion": { "type": "string", "enum": ["egypt", "arab_world", "ancient_world", "world"] },
+        "items": { "type": "array" },
+        "published": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "activityType", "subject", "grade", "items", "published", "createdAt"]
+    },
+    "Announcement": {
+      "title": "Announcement",
+      "description": "Platform announcement targeted to all students, groups, grades, parents, or specific student.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "body": { "type": "string", "minLength": 1, "maxLength": 3000 },
+        "category": { "type": "string", "maxLength": 60 },
+        "targetType": { "type": "string", "enum": ["all", "group", "grade", "student", "parents"] },
+        "targetValue": { "type": "string", "maxLength": 128 },
+        "pinned": { "type": "boolean" },
+        "publishDate": { "type": "string", "maxLength": 40 },
+        "expiryDate": { "type": "string", "maxLength": 40 },
+        "autoEventKey": { "type": "string", "maxLength": 180 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "body", "category", "targetType", "pinned", "createdAt"]
+    },
+    "AuditLog": {
+      "title": "AuditLog",
+      "description": "Immutable administrative activity audit entry.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "actorUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "actorEmail": { "type": "string", "maxLength": 200 },
+        "action": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "entityType": { "type": "string", "maxLength": 80 },
+        "entityId": { "type": "string", "maxLength": 128 },
+        "summary": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "actorUid", "action", "summary", "createdAt"]
+    },
+    "HomeworkSubmission": {
+      "title": "HomeworkSubmission",
+      "description": "Student handwritten photo or text homework submission with teacher review.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "notes": { "type": "string", "maxLength": 1000 },
+        "imageDataUrl": { "type": "string", "maxLength": 850000 },
+        "textAnswer": { "type": "string", "maxLength": 5000 },
+        "status": { "type": "string", "enum": ["submitted", "reviewed"] },
+        "score": { "type": "number" },
+        "maxScore": { "type": "number" },
+        "teacherFeedback": { "type": "string", "maxLength": 1500 },
+        "aiFeedback": { "type": "string", "maxLength": 2000 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "reviewedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "studentId", "studentUid", "title", "status", "createdAt"]
+    },
+    "PlatformExpense": {
+      "title": "PlatformExpense",
+      "description": "Teacher operational expense record.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "category": { "type": "string", "maxLength": 80 },
+        "amount": { "type": "number" },
+        "date": { "type": "string", "maxLength": 30 },
+        "monthKey": { "type": "string", "maxLength": 20 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "category", "amount", "date", "monthKey", "createdAt"]
+    },
+    "JoinRequest": {
+      "title": "JoinRequest",
+      "description": "Prospective student enrollment request submitted after Google sign-in.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "studentPhone": { "type": "string", "maxLength": 30 },
+        "parentName": { "type": "string", "minLength": 2, "maxLength": 160 },
+        "parentPhone": { "type": "string", "minLength": 6, "maxLength": 30 },
+        "stage": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "system": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "subjects": { "type": "array" },
+        "preferredGroupId": { "type": "string", "maxLength": 128 },
+        "notes": { "type": "string", "maxLength": 600 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "uid", "studentName", "parentName", "parentPhone", "grade", "subject", "status", "createdAt"]
+    },
+    "RewardStoreItem": {
+      "title": "RewardStoreItem",
+      "description": "Redeemable reward catalog item in the Gamification Excellence Store.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "description": { "type": "string", "maxLength": 400 },
+        "pointsCost": { "type": "number" },
+        "category": { "type": "string", "enum": ["certificate", "booklet", "discount", "privilege", "gift"] },
+        "stock": { "type": "number" },
+        "active": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "pointsCost", "category", "stock", "active", "createdAt"]
+    },
+    "RewardRedemption": {
+      "title": "RewardRedemption",
+      "description": "Student points redemption request pending teacher delivery confirmation.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "itemId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "itemTitle": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "pointsCost": { "type": "number" },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected"] },
+        "teacherNote": { "type": "string", "maxLength": 400 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "resolvedAt": { "type": "string", "maxLength": 40 }
+      },
+      "required": ["id", "itemId", "itemTitle", "pointsCost", "studentId", "studentUid", "status", "createdAt"]
+    },
+    "MakeupRequest": {
+      "title": "MakeupRequest",
+      "description": "Student request to attend a makeup session with another matching group.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "missedDate": { "type": "string", "maxLength": 30 },
+        "targetGroupId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "targetGroupName": { "type": "string", "maxLength": 160 },
+        "targetSlotSummary": { "type": "string", "maxLength": 200 },
+        "reason": { "type": "string", "maxLength": 400 },
+        "status": { "type": "string", "enum": ["pending", "approved", "rejected", "attended"] },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "studentUid", "missedDate", "targetGroupId", "status", "createdAt"]
+    },
+    "BookletInventory": {
+      "title": "BookletInventory",
+      "description": "Printed booklets or reference books inventory item.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "unitPrice": { "type": "number" },
+        "totalStock": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "grade", "subject", "unitPrice", "totalStock", "createdAt"]
+    },
+    "BookletDistribution": {
+      "title": "BookletDistribution",
+      "description": "Tracks booklet delivery and payment status per student.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "bookletId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "bookletTitle": { "type": "string", "maxLength": 200 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "groupId": { "type": "string", "maxLength": 128 },
+        "price": { "type": "number" },
+        "delivered": { "type": "boolean" },
+        "paid": { "type": "boolean" },
+        "deliveredAt": { "type": "string", "maxLength": 40 },
+        "notes": { "type": "string", "maxLength": 400 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "bookletId", "studentId", "price", "delivered", "paid", "createdAt"]
+    },
+    "StudentQuestion": {
+      "title": "StudentQuestion",
+      "description": "Student Q&A inbox entry with optional photo and teacher reply.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "studentName": { "type": "string", "maxLength": 160 },
+        "studentUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "lesson": { "type": "string", "maxLength": 160 },
+        "questionText": { "type": "string", "minLength": 2, "maxLength": 4000 },
+        "imageDataUrl": { "type": "string", "maxLength": 850000 },
+        "status": { "type": "string", "enum": ["open", "answered"] },
+        "teacherAnswer": { "type": "string", "maxLength": 6000 },
+        "answeredAt": { "type": "string", "maxLength": 40 },
+        "convertedToBank": { "type": "boolean" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "studentId", "studentUid", "subject", "questionText", "status", "createdAt"]
+    },
+    "LiveQuizSession": {
+      "title": "LiveQuizSession",
+      "description": "Summary record of completed real-time classroom quiz challenge.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "pin": { "type": "string", "maxLength": 16 },
+        "title": { "type": "string", "maxLength": 200 },
+        "subject": { "type": "string", "maxLength": 80 },
+        "grade": { "type": "string", "maxLength": 80 },
+        "questionCount": { "type": "number" },
+        "participantCount": { "type": "number" },
+        "winners": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "pin", "title", "questionCount", "participantCount", "winners", "createdAt"]
+    },
+    "PreviewInvite": {
+      "title": "PreviewInvite",
+      "description": "Privacy-safe teacher guest showcase invite token containing no student PII.",
+      "type": "object",
+      "properties": {
+        "token": { "type": "string", "minLength": 16, "maxLength": 128 },
+        "active": { "type": "boolean" },
+        "label": { "type": "string", "maxLength": 120 },
+        "teacherName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "heroTagline": { "type": "string", "maxLength": 300 },
+        "teacherBio": { "type": "string", "maxLength": 1500 },
+        "stages": { "type": "array" },
+        "subjects": { "type": "array" },
+        "systems": { "type": "array" },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["token", "active", "teacherName", "createdAt", "updatedAt"]
+    },
+    "PlatformInvite": {
+      "title": "PlatformInvite",
+      "description": "Unique Firestore-backed invite token with expiry, usage quota, and target routing without student PII.",
+      "type": "object",
+      "properties": {
+        "inviteId": { "type": "string", "minLength": 16, "maxLength": 128 },
+        "inviteType": { "type": "string", "enum": ["showcase", "student_register", "diploma_join"] },
+        "active": { "type": "boolean" },
+        "label": { "type": "string", "minLength": 1, "maxLength": 160 },
+        "recipientName": { "type": "string", "maxLength": 120 },
+        "maxUses": { "type": "number" },
+        "usedCount": { "type": "number" },
+        "expiresAt": { "type": "string", "format": "date-time" },
+        "lastOpenedAt": { "type": "string", "format": "date-time" },
+        "teacherName": { "type": "string", "minLength": 1, "maxLength": 120 },
+        "heroTagline": { "type": "string", "maxLength": 500 },
+        "teacherBio": { "type": "string", "maxLength": 2000 },
+        "stages": { "type": "array" },
+        "subjects": { "type": "array" },
+        "systems": { "type": "array" },
+        "preselectedStage": { "type": "string", "maxLength": 80 },
+        "preselectedGrade": { "type": "string", "maxLength": 80 },
+        "preselectedSubject": { "type": "string", "maxLength": 80 },
+        "diplomaInviteCode": { "type": "string", "maxLength": 128 },
+        "createdByUid": { "type": "string", "maxLength": 128 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["inviteId", "inviteType", "active", "label", "maxUses", "usedCount", "teacherName", "createdAt", "updatedAt"]
+    },
+    "DiplomaSource": {
+      "title": "DiplomaSource",
+      "description": "Collaborative Educational Diploma book/lesson source and extracted high-yield focus points.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 220 },
+        "courseName": { "type": "string", "minLength": 1, "maxLength": 140 },
+        "bookName": { "type": "string", "minLength": 1, "maxLength": 200 },
+        "lessonName": { "type": "string", "maxLength": 200 },
+        "extractedText": { "type": "string", "maxLength": 250000 },
+        "fileName": { "type": "string", "maxLength": 220 },
+        "summary": { "type": "string", "maxLength": 6000 },
+        "focusPoints": { "type": "array" },
+        "preDiplomaEssentials": { "type": "array" },
+        "comparisons": { "type": "array" },
+        "citations": { "type": "array" },
+        "createdByUid": { "type": "string", "maxLength": 128 },
+        "createdByName": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "courseName", "bookName", "extractedText", "focusPoints", "createdAt", "updatedAt"]
+    },
+    "DiplomaExam": {
+      "title": "DiplomaExam",
+      "description": "100% MCQ Bubble Sheet timed practice exam for the Educational Diploma.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "title": { "type": "string", "minLength": 1, "maxLength": 220 },
+        "courseName": { "type": "string", "minLength": 1, "maxLength": 140 },
+        "bookName": { "type": "string", "maxLength": 200 },
+        "lessonName": { "type": "string", "maxLength": 200 },
+        "durationMinutes": { "type": "number" },
+        "questions": { "type": "array" },
+        "sourceIds": { "type": "array" },
+        "includesMistakesCount": { "type": "number" },
+        "mode": { "type": "string", "enum": ["standard", "mistakes_drill", "pre_diploma"] },
+        "createdByUid": { "type": "string", "maxLength": 128 },
+        "createdByName": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "title", "courseName", "durationMinutes", "questions", "includesMistakesCount", "mode", "createdAt", "updatedAt"]
+    },
+    "DiplomaAttempt": {
+      "title": "DiplomaAttempt",
+      "description": "Completed personal Bubble Sheet exam attempt scoped to ownerUid.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "examId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "examTitle": { "type": "string", "minLength": 1, "maxLength": 220 },
+        "courseName": { "type": "string", "minLength": 1, "maxLength": 140 },
+        "totalQuestions": { "type": "number" },
+        "correctCount": { "type": "number" },
+        "wrongCount": { "type": "number" },
+        "scorePct": { "type": "number" },
+        "durationUsedSeconds": { "type": "number" },
+        "answers": { "type": "object" },
+        "flaggedIds": { "type": "array" },
+        "wrongQuestionIds": { "type": "array" },
+        "breakdown": { "type": "array" },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "ownerName": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "examId", "examTitle", "courseName", "totalQuestions", "correctCount", "wrongCount", "scorePct", "durationUsedSeconds", "answers", "wrongQuestionIds", "breakdown", "createdAt"]
+    },
+    "DiplomaMistake": {
+      "title": "DiplomaMistake",
+      "description": "Persistent personal mistake reminder and spaced reinforcement record scoped to ownerUid.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "questionHash": { "type": "string", "minLength": 4, "maxLength": 128 },
+        "courseName": { "type": "string", "minLength": 1, "maxLength": 140 },
+        "bookName": { "type": "string", "maxLength": 200 },
+        "lessonName": { "type": "string", "maxLength": 200 },
+        "prompt": { "type": "string", "minLength": 2, "maxLength": 2000 },
+        "options": { "type": "array" },
+        "correctIndex": { "type": "number" },
+        "correctAnswer": { "type": "string", "minLength": 1, "maxLength": 1000 },
+        "lastChosenAnswer": { "type": "string", "maxLength": 1000 },
+        "explanation": { "type": "string", "maxLength": 3000 },
+        "focusTip": { "type": "string", "maxLength": 1500 },
+        "aiReinforcementNote": { "type": "string", "maxLength": 4000 },
+        "wrongCount": { "type": "number" },
+        "consecutiveCorrect": { "type": "number" },
+        "status": { "type": "string", "enum": ["active_reminder", "mastered"] },
+        "pinned": { "type": "boolean" },
+        "ownerUid": { "type": "string", "maxLength": 128 },
+        "ownerName": { "type": "string", "maxLength": 150 },
+        "lastWrongAt": { "type": "string", "maxLength": 40 },
+        "lastReviewedAt": { "type": "string", "maxLength": 40 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "questionHash", "courseName", "prompt", "options", "correctIndex", "correctAnswer", "lastChosenAnswer", "explanation", "focusTip", "wrongCount", "consecutiveCorrect", "status", "lastWrongAt", "createdAt", "updatedAt"]
+    },
+    "DiplomaMember": {
+      "title": "DiplomaMember",
+      "description": "Authorized study partner with access strictly isolated to the Educational Diploma workspace.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 150 },
+        "role": { "type": "string", "enum": ["member"] },
+        "active": { "type": "boolean" },
+        "inviteId": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "createdAt": { "type": "string", "format": "date-time" },
+        "updatedAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["uid", "displayName", "role", "active", "inviteId", "createdAt", "updatedAt"]
+    },
+    "DiplomaInvite": {
+      "title": "DiplomaInvite",
+      "description": "One-time invite code created by owner to admit a colleague into the Educational Diploma Hub only.",
+      "type": "object",
+      "properties": {
+        "inviteId": { "type": "string", "minLength": 4, "maxLength": 128 },
+        "displayName": { "type": "string", "minLength": 1, "maxLength": 150 },
+        "notes": { "type": "string", "maxLength": 500 },
+        "active": { "type": "boolean" },
+        "used": { "type": "boolean" },
+        "claimedByUid": { "type": "string", "maxLength": 128 },
+        "claimedByName": { "type": "string", "maxLength": 150 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["inviteId", "displayName", "active", "used", "createdAt"]
+    },
+    "DiplomaChatMessage": {
+      "title": "DiplomaChatMessage",
+      "description": "Real-time collaborative study chat message within the Educational Diploma workspace.",
+      "type": "object",
+      "properties": {
+        "id": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "senderUid": { "type": "string", "minLength": 1, "maxLength": 128 },
+        "senderName": { "type": "string", "minLength": 1, "maxLength": 150 },
+        "senderRole": { "type": "string", "enum": ["owner", "member"] },
+        "text": { "type": "string", "minLength": 1, "maxLength": 4000 },
+        "courseName": { "type": "string", "maxLength": 140 },
+        "attachmentType": { "type": "string", "enum": ["source", "exam"] },
+        "attachmentId": { "type": "string", "maxLength": 128 },
+        "attachmentTitle": { "type": "string", "maxLength": 220 },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["id", "senderUid", "senderName", "senderRole", "text", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/teachers/{teacherId}": {
+      "schema": { "$ref": "#/entities/Teacher" },
+      "description": "Teacher and assistant administrator accounts."
+    },
+    "/portalInvites/{inviteHash}": {
+      "schema": { "$ref": "#/entities/PortalInvite" },
+      "description": "Hashed student/parent portal linking invites."
+    },
+    "/userLinks/{uid}": {
+      "schema": { "$ref": "#/entities/UserLink" },
+      "description": "Authenticated user UID bindings to student or parent records."
+    },
+    "/settings/{settingId}": {
+      "schema": { "$ref": "#/entities/PlatformSettings" },
+      "description": "Platform configuration and teacher branding."
+    },
+    "/groups/{groupId}": {
+      "schema": { "$ref": "#/entities/Group" },
+      "description": "Study groups."
+    },
+    "/students/{studentId}": {
+      "schema": { "$ref": "#/entities/Student" },
+      "description": "Student master records."
+    },
+    "/students/{studentId}/privateNotes/{noteId}": {
+      "schema": { "$ref": "#/entities/PrivateNote" },
+      "description": "Teacher-only confidential student notes."
+    },
+    "/studentPortals/{studentId}": {
+      "schema": { "$ref": "#/entities/StudentPortal" },
+      "description": "Isolated student and parent portal summary document."
+    },
+    "/scheduleSlots/{slotId}": {
+      "schema": { "$ref": "#/entities/ScheduleSlot" },
+      "description": "Weekly timetable slots."
+    },
+    "/attendanceRecords/{recordId}": {
+      "schema": { "$ref": "#/entities/AttendanceRecord" },
+      "description": "Attendance, recitation, and homework logs."
+    },
+    "/evaluations/{evalId}": {
+      "schema": { "$ref": "#/entities/Evaluation" },
+      "description": "Student academic evaluations."
+    },
+    "/payments/{paymentId}": {
+      "schema": { "$ref": "#/entities/Payment" },
+      "description": "Student tuition payment transactions."
+    },
+    "/expenses/{expenseId}": {
+      "schema": { "$ref": "#/entities/PlatformExpense" },
+      "description": "Teacher operational expenses."
+    },
+    "/libraryItems/{itemId}": {
+      "schema": { "$ref": "#/entities/LibraryItem" },
+      "description": "Educational content library."
+    },
+    "/questionBank/{questionId}": {
+      "schema": { "$ref": "#/entities/QuestionBankItem" },
+      "description": "Question bank items."
+    },
+    "/exams/{examId}": {
+      "schema": { "$ref": "#/entities/Exam" },
+      "description": "Student-safe exams without plaintext answer keys."
+    },
+    "/examTemplates/{templateId}": {
+      "schema": { "$ref": "#/entities/ExamTemplate" },
+      "description": "Reusable exam factory templates."
+    },
+    "/examAnswerKeys/{examId}": {
+      "schema": { "$ref": "#/entities/ExamAnswerKey" },
+      "description": "Teacher-only exam answer keys."
+    },
+    "/examAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/ExamAttempt" },
+      "description": "Student exam attempts and graded scores."
+    },
+    "/homeworkSubmissions/{submissionId}": {
+      "schema": { "$ref": "#/entities/HomeworkSubmission" },
+      "description": "Student handwritten homework photo/text submissions."
+    },
+    "/remedialAssignments/{assignmentId}": {
+      "schema": { "$ref": "#/entities/RemedialAssignment" },
+      "description": "Closed-loop targeted remedial drills for students."
+    },
+    "/practiceSessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/AdaptivePracticeSession" },
+      "description": "Adaptive student self-practice sessions."
+    },
+    "/studentAchievements/{studentId}": {
+      "schema": { "$ref": "#/entities/StudentAchievementState" },
+      "description": "Student points, badges, certificates, rewards, and bookmarks."
+    },
+    "/pointRewards/{rewardId}": {
+      "schema": { "$ref": "#/entities/PointReward" },
+      "description": "Excellence point rewards granted by teacher."
+    },
+    "/groupLeaderboard/{groupId}": {
+      "schema": { "$ref": "#/entities/GroupLeaderboard" },
+      "description": "Aggregated group standings for fair competition."
+    },
+    "/interactiveActivities/{activityId}": {
+      "schema": { "$ref": "#/entities/InteractiveActivity" },
+      "description": "Interactive maps, timeline ordering, matching, flashcards, irab, and dictation."
+    },
+    "/announcements/{announcementId}": {
+      "schema": { "$ref": "#/entities/Announcement" },
+      "description": "Targeted announcements."
+    },
+    "/joinRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/JoinRequest" },
+      "description": "Prospective student group enrollment requests."
+    },
+    "/auditLogs/{logId}": {
+      "schema": { "$ref": "#/entities/AuditLog" },
+      "description": "Administrative audit trail."
+    },
+    "/rewardStoreItems/{itemId}": {
+      "schema": { "$ref": "#/entities/RewardStoreItem" },
+      "description": "Gamification reward store items."
+    },
+    "/rewardRedemptions/{redemptionId}": {
+      "schema": { "$ref": "#/entities/RewardRedemption" },
+      "description": "Student reward redemption requests."
+    },
+    "/makeupRequests/{requestId}": {
+      "schema": { "$ref": "#/entities/MakeupRequest" },
+      "description": "Makeup class attendance requests."
+    },
+    "/booklets/{bookletId}": {
+      "schema": { "$ref": "#/entities/BookletInventory" },
+      "description": "Booklets and handouts stock inventory."
+    },
+    "/bookletDistributions/{distId}": {
+      "schema": { "$ref": "#/entities/BookletDistribution" },
+      "description": "Student booklet delivery and payment tracker."
+    },
+    "/studentQuestions/{questionId}": {
+      "schema": { "$ref": "#/entities/StudentQuestion" },
+      "description": "Ask the Teacher student Q&A inbox."
+    },
+    "/liveQuizSessions/{sessionId}": {
+      "schema": { "$ref": "#/entities/LiveQuizSession" },
+      "description": "Completed live classroom quiz battle summaries."
+    },
+    "/previewInvites/{token}": {
+      "schema": { "$ref": "#/entities/PreviewInvite" },
+      "description": "Guest showcase invite links exposing platform structure without student PII."
+    },
+    "/platformInvites/{inviteId}": {
+      "schema": { "$ref": "#/entities/PlatformInvite" },
+      "description": "Persistent unique invite links with expiry, usage quota, and direct routing."
+    },
+    "/diplomaSources/{sourceId}": {
+      "schema": { "$ref": "#/entities/DiplomaSource" },
+      "description": "Shared Educational Diploma books, notes, and extracted high-yield focus points."
+    },
+    "/diplomaExams/{examId}": {
+      "schema": { "$ref": "#/entities/DiplomaExam" },
+      "description": "Shared timed MCQ Bubble Sheet exams."
+    },
+    "/diplomaAttempts/{attemptId}": {
+      "schema": { "$ref": "#/entities/DiplomaAttempt" },
+      "description": "User-scoped Bubble Sheet exam attempts."
+    },
+    "/diplomaMistakes/{mistakeId}": {
+      "schema": { "$ref": "#/entities/DiplomaMistake" },
+      "description": "User-scoped persistent mistake reinforcement queue for Educational Diploma study."
+    },
+    "/diplomaMembers/{memberId}": {
+      "schema": { "$ref": "#/entities/DiplomaMember" },
+      "description": "Educational Diploma study partners isolated from teacher center data."
+    },
+    "/diplomaInvites/{inviteId}": {
+      "schema": { "$ref": "#/entities/DiplomaInvite" },
+      "description": "One-time invite codes to join the Educational Diploma study hub."
+    },
+    "/diplomaChats/{messageId}": {
+      "schema": { "$ref": "#/entities/DiplomaChatMessage" },
+      "description": "Real-time collaborative study discussions inside the Educational Diploma hub."
+    }
+  }
+}
